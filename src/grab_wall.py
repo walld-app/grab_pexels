@@ -4,20 +4,21 @@ from time import sleep
 import pika
 from pypexels import PyPexels
 
-from config import API, INTERVAL, PER_PAGE, RMQ_HOST, log
+from config import API, INTERVAL, PER_PAGE, PIKA_DURABLE, PIKA_PARAMS, log
 from picture import Picture
 
+
 def prepare_stuff():
-    connection = pika.BlockingConnection(pika.ConnectionParameters(RMQ_HOST))
+    connection = pika.BlockingConnection(PIKA_PARAMS)
     channel = connection.channel()
     channel.queue_declare(queue='check_out', durable=True)
     return channel
 
 def start_grab():
-    durable = pika.BasicProperties(delivery_mode=2)
     chan = prepare_stuff()
     pexel = PyPexels(api_key=API)
     wait = 0
+    log.info('started')
     while True:
         log.info('Attemting to get photos!')
         try:
@@ -32,9 +33,10 @@ def start_grab():
         for photo in random_photos_page.entries:
             pic = Picture.from_pexel(photo)
             dump = dumps(pic)
+            # добавить проверку на повторение с помощью постгре
             log.info(f'Adding {pic}!')
             chan.basic_publish(exchange='',
                                routing_key='check_out',
                                body=dump,
-                               properties=durable)
+                               properties=PIKA_DURABLE)
         sleep(INTERVAL)
