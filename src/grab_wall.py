@@ -23,8 +23,8 @@ def start_grab():
         try:
             random_photos_page = pexel.random(per_page=PER_PAGE)
         except: # TODO В либе прокол по ходу и мы не можем отследить ошибку
-            print(f'Got banned from pexels,'
-                  f' waiting {str(INTERVAL + wait)} secs.')
+            log.warning(f'Got banned from pexels,'
+                        f' waiting {str(INTERVAL + wait)} secs.')
             sleep(INTERVAL + wait)
             wait += 30
             continue
@@ -32,7 +32,7 @@ def start_grab():
         for photo in random_photos_page.entries:
             pic = Picture.from_pexel(photo)
             dump = dumps(pic)
-            print(f'Adding {pic}!')
+            log.info(f'Adding {pic}!')
             chan.basic_publish(exchange='',
                                routing_key='check_out',
                                body=dump,
