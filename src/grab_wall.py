@@ -1,11 +1,10 @@
-from pickle import dumps
 from time import sleep
 
 import pika
 from pypexels import PyPexels
 
 from config import API, INTERVAL, PER_PAGE, PIKA_DURABLE, PIKA_PARAMS, log
-from picture import Picture
+from picture import Picture, PictureValid
 
 
 def prepare_stuff():
@@ -31,12 +30,15 @@ def start_grab():
             continue
         wait = 0
         for photo in random_photos_page.entries:
-            pic = Picture.from_pexel(photo)
-            dump = dumps(pic)
+            pic = PictureValid(service="Pexels",
+                               download_url=photo.src["original"],
+                               preview_url=photo.src["large"],
+                               author=photo.photographer,
+                               **photo.__dict__)
             # добавить проверку на повторение с помощью постгре
             log.info(f'Adding {pic}!')
             chan.basic_publish(exchange='',
                                routing_key='check_out',
-                               body=dump,
+                               body=pic.json(),
                                properties=PIKA_DURABLE)
         sleep(INTERVAL)
