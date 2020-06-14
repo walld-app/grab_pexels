@@ -1,4 +1,4 @@
-from grab_wall import start_grab
+from grab_wall import do_stuff
 
 if __name__ == '__main__':
-    start_grab()
+    do_stuff()
