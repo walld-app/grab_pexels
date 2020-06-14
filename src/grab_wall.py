@@ -1,44 +1,52 @@
 from time import sleep
 
-import pika
 from pypexels import PyPexels
+from pypexels.src.errors import PexelsError
+from walld_db.helpers import Rmq, DB
+from walld_db.models import PictureValid, RejectedPicture
 
-from config import API, INTERVAL, PER_PAGE, PIKA_DURABLE, PIKA_PARAMS, log
-from picture import Picture, PictureValid
-
-
-def prepare_stuff():
-    connection = pika.BlockingConnection(PIKA_PARAMS)
-    channel = connection.channel()
-    channel.queue_declare(queue='check_out', durable=True)
-    return channel
+from config import (API, INTERVAL, PER_PAGE, RMQ_HOST, RMQ_PASS, RMQ_PORT,
+                    RMQ_USER, log, DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT)
 
 def start_grab():
-    chan = prepare_stuff()
+
+    db = DB(db_host=DB_HOST,
+            db_port=DB_PORT,
+            db_user=DB_USER,
+            db_passwd=DB_PASS,
+            db_name=DB_NAME)
+
+    rmq = Rmq(host=RMQ_HOST, port=RMQ_PORT, user=RMQ_USER, passw=RMQ_PASS)
+
     pexel = PyPexels(api_key=API)
-    wait = 0
     log.info('started')
     while True:
         log.info('Attemting to get photos!')
+
         try:
             random_photos_page = pexel.random(per_page=PER_PAGE)
-        except: # TODO В либе прокол по ходу и мы не можем отследить ошибку
+        except PexelsError:
             log.warning(f'Got banned from pexels,'
-                        f' waiting {str(INTERVAL + wait)} secs.')
-            sleep(INTERVAL + wait)
-            wait += 30
+                        f' waiting 5 mins.')
+            sleep(300)
             continue
-        wait = 0
-        for photo in random_photos_page.entries:
+        entries = list(random_photos_page.entries)
+        rpics = db.rejected_pictures
+        for photo in entries:
+            if photo.src["original"] in rpics:
+                rpics.remove(photo.src["original"])
+
+        for photo in entries:
             pic = PictureValid(service="Pexels",
                                download_url=photo.src["original"],
                                preview_url=photo.src["large"],
                                author=photo.photographer,
                                **photo.__dict__)
-            # добавить проверку на повторение с помощью постгре
             log.info(f'Adding {pic}!')
-            chan.basic_publish(exchange='',
-                               routing_key='check_out',
-                               body=pic.json(),
-                               properties=PIKA_DURABLE)
+            rmq.channel.basic_publish(exchange='',
+                                      routing_key='check_out',
+                                      body=pic.json(),
+                                      properties=rmq.durable)
+        rmq.connection.process_data_events()
+        print(db.rejected_pictures)
         sleep(INTERVAL)
