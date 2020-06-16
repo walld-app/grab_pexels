@@ -10,11 +10,11 @@ from config import (API, INTERVAL, PER_PAGE, RMQ_HOST, RMQ_PASS, RMQ_PORT,
 
 def do_stuff():
 
-    db = DB(db_host=DB_HOST,
-            db_port=DB_PORT,
-            db_user=DB_USER,
-            db_passwd=DB_PASS,
-            db_name=DB_NAME)
+    db = DB(host=DB_HOST,
+            port=DB_PORT,
+            user=DB_USER,
+            passwd=DB_PASS,
+            name=DB_NAME)
 
     rmq = Rmq(host=RMQ_HOST,
               port=RMQ_PORT,
@@ -38,7 +38,9 @@ def do_stuff():
             log.warning(f'{word} banned on pexels,'
                         f' waiting 5 mins.')
             banned = True
-            sleep(300)
+            for i in range(6):
+                rmq.connection.process_data_events()
+                sleep(50)
             continue
 
         rpics = db.rejected_pictures
@@ -51,8 +53,9 @@ def do_stuff():
             pic = PictureValid(service="Pexels",
                                download_url=photo.src["original"],
                                preview_url=photo.src["large"],
-                               author=photo.photographer,
-                               **photo.__dict__)
+                               source_url=photo.url,
+                               height=int(photo.height),
+                               width=int(photo.width))
 
             log.info(f'Adding {pic}!')
 
@@ -60,6 +63,8 @@ def do_stuff():
                                       routing_key='check_out',
                                       body=pic.json(),
                                       properties=rmq.durable)
-
-        rmq.connection.process_data_events()
-        sleep(INTERVAL)
+        int_range = range(0, INTERVAL, 20)
+        for i in int_range:
+            how_many = len(list(int_range))
+            rmq.connection.process_data_events()
+            sleep(INTERVAL/how_many)

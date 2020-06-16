@@ -3,8 +3,8 @@ import logging
 
 API = getenv('API')
 assert API
-INTERVAL = int(getenv('INTERVAL', '120'))
-PER_PAGE = int(getenv('PER_PAGE', '20'))
+INTERVAL = int(getenv('INTERVAL', '50'))
+PER_PAGE = int(getenv('PER_PAGE', '10'))
 LOG_LEVEL = getenv('LOG_LEVEL', 'INFO')
 RMQ_HOST = getenv('RMQ_HOST', 'localhost')
 RMQ_USER = getenv('RMQ_USER', 'guest')
