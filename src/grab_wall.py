@@ -38,18 +38,20 @@ def do_stuff():
             log.warning(f'{word} banned on pexels,'
                         f' waiting 5 mins.')
             banned = True
-            for i in range(6):
+            for _ in range(6):
                 rmq.connection.process_data_events()
                 sleep(50)
             continue
 
-        rpics = db.rejected_pictures
+        rpics = db.seen_pictures
 
         for photo in entries:
-            if photo.src["original"] in rpics:
-                rpics.remove(photo.src["original"])
+            source = photo.src["original"]
+            if source in rpics:
+                log.info(f'Already seen this({source}) picture!')
+                continue
 
-        for photo in entries:
+            db.add_seen_pic(source)
             pic = PictureValid(service="Pexels",
                                download_url=photo.src["original"],
                                preview_url=photo.src["large"],
