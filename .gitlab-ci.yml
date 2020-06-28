@@ -34,8 +34,9 @@ test:
 go_docker_hub:
     image: docker
     stage: go_docker_hub
+    services:
+      - docker:dind
     script:
-    - apk add docker
     - docker build -t walld_grab_pexels .
     - docker tag walld_grab_pexels kz159/walld_grab_pexels
     - docker push kz159/walld_grab_pexels
