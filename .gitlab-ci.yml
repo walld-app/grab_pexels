@@ -14,11 +14,11 @@ stages:
     - test
     - go_docker_hub
 
-before_script:
-  - python -V  # Print out python version for debugging
-  - pip install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
+# before_script:
+#   - python -V  # Print out python version for debugging
+#   - pip install virtualenv
+#   - virtualenv venv
+#   - source venv/bin/activate
 
 test:
     image: python:3.8.2-alpine
