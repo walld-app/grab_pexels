@@ -1,6 +1,3 @@
-variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-
 cache:
   paths:
     - .cache/pip
@@ -12,7 +9,9 @@ services:
 variables:
     POSTGRES_PASSWORD: 1234
     DOCKER_TLS_CERTDIR: ""
-
+    RMQ_HOST: rabbitmq
+    DB_HOST: postgres
+    API: "563492ad6f917000010000011bc9ae20b2ea4640873fdd836c929c8b"
 
 stages:
     - test
@@ -28,12 +27,15 @@ test:
     image: python:3.8.2-alpine
     services:
         - postgres:12.2-alpine
+        - rabbitmq:alpine
     stage: test
     script:
-    - export DB_HOST=postgres
     - apk update && apk add --no-cache python-dev pytest docker
     - pip install -r requirements.txt
-    - pytest test/test1.py
+    - cd test
+    - pytest
+
+
 
 go_docker_hub:
     image: docker

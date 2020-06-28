@@ -5,10 +5,10 @@ from pypexels.src.errors import PexelsError
 from walld_db.helpers import Rmq, DB
 from walld_db.models import PictureValid
 
-from config import (API, INTERVAL, PER_PAGE, RMQ_HOST, RMQ_PASS, RMQ_PORT,
+from .config import (API, INTERVAL, PER_PAGE, RMQ_HOST, RMQ_PASS, RMQ_PORT,
                     RMQ_USER, log, DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT)
 
-def do_stuff():
+def do_stuff(infinite=True):
 
     db = DB(host=DB_HOST,
             port=DB_PORT,
@@ -20,13 +20,13 @@ def do_stuff():
               port=RMQ_PORT,
               user=RMQ_USER,
               passw=RMQ_PASS)
+
     pexel = PyPexels(api_key=API)
 
     log.info('started')
 
     banned = False
     while True:
-
         try:
             log.info('Attemting to get photos!')
             random_photos_page = pexel.random(per_page=PER_PAGE)
@@ -72,3 +72,6 @@ def do_stuff():
             how_many = len(list(int_range))
             rmq.connection.process_data_events()
             sleep(INTERVAL/how_many)
+
+        if not infinite:
+            break
