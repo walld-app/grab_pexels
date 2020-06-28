@@ -1,8 +1,10 @@
 import sys
 from pathlib import Path
 
-path = Path()
-print(path.cwd())
+path = Path().cwd()
+sys.path.insert(0, str(path))
+sys.path.insert(1, str(path / 'src'))
+
 from grab_wall import do_stuff
 
 def test_passing():
