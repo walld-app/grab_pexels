@@ -2,11 +2,12 @@ from time import sleep
 
 from pypexels import PyPexels
 from pypexels.src.errors import PexelsError
-from walld_db.helpers import Rmq, DB
+from walld_db.helpers import DB, Rmq
 from walld_db.models import PictureValid
 
-from .config import (API, INTERVAL, PER_PAGE, RMQ_HOST, RMQ_PASS, RMQ_PORT,
-                    RMQ_USER, log, DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT)
+from config import (API, DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER, INTERVAL,
+                    PER_PAGE, RMQ_HOST, RMQ_PASS, RMQ_PORT, RMQ_USER, log)
+
 
 def do_stuff(infinite=True):
 
@@ -67,11 +68,11 @@ def do_stuff(infinite=True):
                                       body=pic.json(),
                                       properties=rmq.durable)
 
+        if not infinite:
+            return 
+
         int_range = range(0, INTERVAL, 20)
-        for i in int_range:
+        for _ in int_range:
             how_many = len(list(int_range))
             rmq.connection.process_data_events()
             sleep(INTERVAL/how_many)
-
-        if not infinite:
-            break
