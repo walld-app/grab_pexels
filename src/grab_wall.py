@@ -52,6 +52,7 @@ def do_stuff():
                 continue
 
             db.add_seen_pic(source)
+
             pic = PictureValid(service="Pexels",
                                download_url=photo.src["original"],
                                preview_url=photo.src["large"],
@@ -65,6 +66,7 @@ def do_stuff():
                                       routing_key='check_out',
                                       body=pic.json(),
                                       properties=rmq.durable)
+
         int_range = range(0, INTERVAL, 20)
         for i in int_range:
             how_many = len(list(int_range))
