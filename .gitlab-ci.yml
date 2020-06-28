@@ -36,7 +36,8 @@ test:
     
 go_docker_hub:
     stage: go_docker_hub
-    docker build -t walld_grab_pexels .
-    docker tag walld_grab_pexels kz159/walld_grab_pexels
-    docker push kz159/walld_grab_pexels
+    script:
+    - docker build -t walld_grab_pexels .
+    - docker tag walld_grab_pexels kz159/walld_grab_pexels
+    - docker push kz159/walld_grab_pexels
 
