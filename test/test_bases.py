@@ -1,7 +1,8 @@
 import sys
+from pathlib import Path
 
-sys.path.insert(0, './src') # TODO Такой костыль, боже мой
-
+path = Path()
+print(path.cwd())
 from grab_wall import do_stuff
 
 def test_passing():
