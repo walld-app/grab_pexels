@@ -9,6 +9,8 @@ cache:
 
 variables:
     POSTGRES_PASSWORD: 1234
+    DOCKER_TLS_CERTDIR: ""
+
 
 stages:
     - test
