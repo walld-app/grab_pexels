@@ -32,7 +32,7 @@ test:
     - export DB_HOST=postgres
     - apk update && apk add --no-cache python-dev pytest docker
     - pip install -r requirements.txt
-    - pytest
+    - pytest test/test1.py
     
 go_docker_hub:
     stage: go_docker_hub
