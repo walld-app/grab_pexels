@@ -11,6 +11,8 @@ variables:
     DOCKER_TLS_CERTDIR: ""
     RMQ_HOST: rabbitmq
     DB_HOST: postgres
+    DB_USER: postgres
+    DB_PASSWORD: 1234
     API: "563492ad6f917000010000011bc9ae20b2ea4640873fdd836c929c8b"
 
 stages:
