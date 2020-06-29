@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-path = Path().cwd()
+path = Path().cwd().parent
 sys.path.insert(0, str(path))
 sys.path.insert(1, str(path / 'src'))
 
