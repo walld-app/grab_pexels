@@ -32,7 +32,7 @@ test:
     script:
     - apk update && apk add --no-cache python-dev pytest docker
     - /usr/local/bin/python -m pip install --upgrade pip
-    - pip install -r requirements.txt
+    - pip install -r requirements.txt --user
     - cd test
     - pytest
 
