@@ -5,6 +5,8 @@ path = Path().cwd()
 sys.path.insert(0, str(path))
 sys.path.insert(1, str(path / 'src'))
 
+print(sys.path)
+
 from grab_wall import do_stuff
 
 def test_passing():
