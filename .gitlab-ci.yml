@@ -45,6 +45,7 @@ test:
     - mkdir -p alembic/versions
     - alembic revision --autogenerate -m "fistssas"
     - alembic upgrade head
+    - ls /usr/lib/python3.8/site-packages
     - cd ../test
     - pytest
 
