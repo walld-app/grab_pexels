@@ -33,7 +33,7 @@ test:
     - apk update && apk add --no-cache python-dev pytest docker
     - pip install -r requirements.txt
     - cd test
-    - pytest
+    - python -m pytest
 
 
 
