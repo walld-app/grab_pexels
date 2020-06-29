@@ -30,7 +30,7 @@ test:
         - rabbitmq:alpine
     stage: test
     script:
-    - apk update && apk add --no-cache python3-dev pytest postgresql-dev musl-dev docker git
+    - apk update && apk add --no-cache python3-dev pytest postgresql-dev musl-dev docker git gcc
     - /usr/local/bin/python -m pip install --upgrade pip
     - pip install -r requirements.txt --user
     - cd test
