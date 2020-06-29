@@ -17,23 +17,29 @@ stages:
     - test
     - go_docker_hub
 
-before_script:
-  - python -V  # Print out python version for debugging
-  - apk add git py3-pip
-  - git clone git://dev.mrbot.im/walld/WalldDataBase.git
-  - cd WalldDataBase
-  - pip install -r requirements.txt --user
-  - alembic revision --autogenerate -m "fistssas"
-  - alembic upgrade head
+# before_script:
+#   - python -V  # Print out python version for debugging
+#   - apk add py3-pip wget zip
+#   - wget https://dev.mrbot.im/walld/WalldDataBase/-/archive/master/WalldDataBase-master.zip
+#   - unzip WalldDataBase-master.zip
+#   - cd WalldDataBase-master
+#   - pip install -r requirements.txt --user
+#   - alembic revision --autogenerate -m "fistssas"
+#   - alembic upgrade head
 
 test:
     image: python:3.8.2-alpine
+    stage: test
     services:
         - postgres:12.2-alpine
         - rabbitmq:alpine
-    stage: test
     script:
-    - apk update && apk add --no-cache python3-dev pytest postgresql-dev musl-dev docker git gcc
+    - apk update && apk add --no-cache python3-dev pytest postgresql-dev musl-dev docker git gcc wget zip
+    - wget https://dev.mrbot.im/walld/WalldDataBase/-/archive/master/WalldDataBase-master.zip
+    - unzip WalldDataBase-master.zip
+    - cd WalldDataBase-master
+    - alembic revision --autogenerate -m "fistssas"
+    - alembic upgrade head
     - /usr/local/bin/python -m pip install --upgrade pip
     - pip install -r requirements.txt --user
     - cd test
