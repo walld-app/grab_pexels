@@ -28,9 +28,9 @@ test:
     services:
         - postgres:12.2-alpine
         - rabbitmq:alpine
-    stage: test
+    stage: install stuff
     script:
-    - apk update && apk add --no-cache python-dev pytest docker
+    - apk update && apk add --no-cache python-dev pytest docker git
     - /usr/local/bin/python -m pip install --upgrade pip
     - pip install -r requirements.txt --user
     - cd test
