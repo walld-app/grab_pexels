@@ -1,3 +1,4 @@
 pika==1.1.0
 pypexels==1.0.0rc1
 pydantic==1.3
+git+https://github.com/kz159/WalldDataBase@master
