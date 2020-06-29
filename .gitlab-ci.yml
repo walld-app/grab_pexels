@@ -34,8 +34,7 @@ test:
         - rabbitmq:alpine
     script:
     - apk update && apk add --no-cache python3-dev pytest postgresql-dev musl-dev docker git gcc
-    - git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@dev.mrbot.im/walld/WalldDataBase.git"
-    - git clone
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@dev.mrbot.im/walld/WalldDataBase.git
     - cd WalldDataBase
     - alembic revision --autogenerate -m "fistssas"
     - alembic upgrade head
