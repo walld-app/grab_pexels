@@ -45,11 +45,10 @@ test:
     - mkdir -p alembic/versions
     - alembic revision --autogenerate -m "fistssas"
     - alembic upgrade head
+    - ls /usr/local/lib/python3.8/site-packages
     - ls /usr/lib/python3.8/site-packages
     - cd ../test
     - pytest
-
-
 
 go_docker_hub:
     image: docker
