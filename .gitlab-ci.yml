@@ -19,9 +19,12 @@ stages:
 
 before_script:
   - python -V  # Print out python version for debugging
+  - apk add git py3-pip
   - git clone git://dev.mrbot.im/walld/WalldDataBase.git
   - cd WalldDataBase
   - pip install -r requirements.txt --user
+  - alembic revision --autogenerate -m "fistssas"
+  - alembic upgrade head
 
 test:
     image: python:3.8.2-alpine
