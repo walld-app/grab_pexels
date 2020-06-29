@@ -39,10 +39,11 @@ test:
     - apk update && apk add --no-cache python3-dev pytest postgresql-dev musl-dev docker git gcc
     - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@dev.mrbot.im/walld/WalldDataBase.git
     - cd WalldDataBase
+    - /usr/local/bin/python -m pip install --upgrade pip
     - pip install -r requirements.txt
+    - mkdir -p alembic/versions
     - alembic revision --autogenerate -m "fistssas"
     - alembic upgrade head
-    - /usr/local/bin/python -m pip install --upgrade pip
     - cd test
     - pytest
 
