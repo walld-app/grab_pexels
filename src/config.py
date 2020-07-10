@@ -16,6 +16,10 @@ DB_NAME = getenv('DB_NAME', 'postgres')
 DB_USER = getenv('DB_USER', 'postgres')
 DB_PASS = getenv('DB_PASS', '1234')
 logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s')
+
+log = logging.getLogger('pika')
+log.setLevel('CRITICAL')
+
 log = logging.getLogger('grab_pexels')
 log.setLevel(LOG_LEVEL)
 
