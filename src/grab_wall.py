@@ -69,7 +69,7 @@ def do_stuff(infinite=True):
                                       properties=rmq.durable)
 
         if not infinite:
-            return 
+            return
 
         int_range = range(0, INTERVAL, 20)
         for _ in int_range:
