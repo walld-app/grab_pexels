@@ -45,8 +45,13 @@ def do_stuff(infinite=True):
             continue
 
         rpics = db.seen_pictures
+        wo_clones_entries = [] # This is a bad approach, consider adding
+                               # __eq__ method to Photo class
+        for i in entries:
+            if i.id not in [l.id for l in wo_clones_entries]:
+                wo_clones_entries.append(i)
 
-        for photo in entries:
+        for photo in wo_clones_entries:
             source = photo.src["original"]
             if source in rpics:
                 log.info(f'Already seen this({source}) picture!')
