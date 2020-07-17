@@ -12,6 +12,8 @@ RUN pip install --prefix=/install -r /requirements.txt
 
 FROM base
 
+RUN apk add libpq --no-cache
+
 COPY --from=builder /install /usr/local
 
 WORKDIR /app
