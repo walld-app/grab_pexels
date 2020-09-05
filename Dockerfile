@@ -18,6 +18,6 @@ COPY --from=builder /install /usr/local
 
 WORKDIR /app
 
-COPY src/ .
+COPY walld_grab_pexels/ .
 
 CMD python main.py

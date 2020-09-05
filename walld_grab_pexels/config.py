@@ -3,6 +3,7 @@ import logging
 
 API = getenv('API')
 assert API
+
 INTERVAL = int(getenv('INTERVAL', '50'))
 PER_PAGE = int(getenv('PER_PAGE', '10'))
 LOG_LEVEL = getenv('LOG_LEVEL', 'INFO')
@@ -15,6 +16,7 @@ DB_PORT = getenv('DB_PORT', '5432')
 DB_NAME = getenv('DB_NAME', 'postgres')
 DB_USER = getenv('DB_USER', 'postgres')
 DB_PASS = getenv('DB_PASS', '1234')
+
 logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s')
 
 log = logging.getLogger('pika')

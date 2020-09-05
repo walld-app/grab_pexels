@@ -29,31 +29,24 @@ def do_stuff(infinite=True):
     banned = False
     while True:
         try:
-            log.info('Attemting to get photos!')
-            random_photos_page = pexel.random(per_page=PER_PAGE)
-            entries = list(random_photos_page.entries)
+            log.info('Attempting to get photos!')
+            entries = set(pexel.random(per_page=PER_PAGE).entries)
             banned = False
 
         except PexelsError:
             word = "Still" if banned else "Got"
-            log.warning(f'{word} banned on pexels,'
-                        f' waiting 5 mins.')
+            log.warning(f'{word} banned on pexels, waiting 5 min.')
             banned = True
             for _ in range(6):
                 rmq.connection.process_data_events()
                 sleep(50)
             continue
 
-        rpics = db.seen_pictures
-        wo_clones_entries = [] # This is a bad approach, consider adding
-                               # __eq__ method to Photo class
-        for i in entries:
-            if i.id not in [l.id for l in wo_clones_entries]:
-                wo_clones_entries.append(i)
+        rejected_pics = db.seen_pictures
 
-        for photo in wo_clones_entries:
+        for photo in entries:
             source = photo.src["original"]
-            if source in rpics:
+            if source in rejected_pics:
                 log.info(f'Already seen this({source}) picture!')
                 continue
 
