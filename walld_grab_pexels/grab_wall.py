@@ -59,6 +59,10 @@ def do_stuff(infinite=True):
                                height=int(photo.height),
                                width=int(photo.width))
 
+            if not photo.height > photo.width:
+                log.info('not adding this pic because height > weight, for now')
+                continue
+
             log.info(f'Adding {pic}!')
 
             rmq.channel.basic_publish(exchange='',
