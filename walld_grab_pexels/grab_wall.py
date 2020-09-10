@@ -59,7 +59,7 @@ def do_stuff(infinite=True):
                                height=int(photo.height),
                                width=int(photo.width))
 
-            if not photo.height > photo.width:
+            if photo.height > photo.width:
                 log.info('not adding this pic because height > weight, for now')
                 continue
 
